@@ -1,7 +1,14 @@
 var express = require('express');
 var cors = require('cors');
 require('dotenv').config()
-var multer = require('multer');
+const multer = require('multer');
+// use memoryStorage so no disk I/O on Vercel
+// memoryStorage:
+// isn’t localStorage (the browser API) at all
+// it’s a Multer “storage engine” that keeps uploaded files in RAM as a Buffer
+// It lives on the server side inside the multer package
+const storage = multer.memoryStorage();
+const upload  = multer({ storage });
 var app = express();
 
 app.use(cors());
@@ -10,12 +17,9 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 });
 
-app.post('/api/fileanalyse', (req, res) => {
-  const upload = multer({ dest: 'uploads/' });
-  upload.single('upfile')(req, res, function (err) {
-    if (err) {
-      return res.status(400).send({ error: 'File upload failed' });
-    }
+app.post('/api/fileanalyse',
+  upload.single('upfile'),
+  (req, res) => {
     if (!req.file) {
       return res.status(400).send({ error: 'No file uploaded' });
     }
@@ -25,8 +29,8 @@ app.post('/api/fileanalyse', (req, res) => {
       size: req.file.size
     };
     res.json(fileInfo);
-  });
-})
+  }
+)
 
 
 const port = process.env.PORT || 3000;
