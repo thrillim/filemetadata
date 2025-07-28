@@ -6,6 +6,15 @@
       <link rel="shortcut icon" href="https://cdn.freecodecamp.org/universal/favicons/favicon-32x32.png" type="image/x-icon"/>
       <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
       <link href="/public/style.css" rel="stylesheet" type="text/css">
+      <meta
+        http-equiv="Content-Security-Policy"
+        content="
+                default-src 'self';
+                img-src 'self' data: blob:;
+                script-src 'self';
+                style-src 'self' 'unsafe-inline';
+              "
+      >
    </head>
 
    <body>
